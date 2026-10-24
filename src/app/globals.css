@@ -1,119 +1,378 @@
 @import "tailwindcss";
 
+/* ── CSS Custom Properties ─────────────────────────────── */
 :root {
-  --bg-primary: #1a1f2e;
+  --bg-primary:   #1a1f2e;
   --bg-secondary: #242938;
-  --bg-card: #1e2435;
-  --accent-green: #00b050;
-  --accent-green-hover: #00d060;
-  --accent-yellow: #f5c518;
-  --accent-red: #e63946;
-  --text-primary: #ffffff;
-  --text-secondary: #9aa0b4;
-  --border-color: #2e3347;
+  --bg-card:      #1e2435;
+  --green:        #00b050;
+  --green-dark:   #007a38;
+  --yellow:       #f5c518;
+  --red:          #e63946;
+  --text-muted:   #9aa0b4;
+  --border:       #2e3347;
+  --radius:       10px;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-tap-highlight-color: transparent; scroll-behavior: smooth; }
 body {
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
+  background: var(--bg-primary);
+  color: #fff;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   overflow-x: hidden;
 }
 
-/* Scrollbar */
-::-webkit-scrollbar { width: 6px; height: 6px; }
+/* ── Scrollbar ─────────────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: var(--bg-secondary); }
-::-webkit-scrollbar-thumb { background: #3a4060; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #4a5070; }
+::-webkit-scrollbar-thumb { background: #3a4060; border-radius: 2px; }
 
-/* Animations */
-@keyframes pulse-live {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
-}
-@keyframes slideDown {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-@keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
+/* ── Animations ────────────────────────────────────────── */
+@keyframes pulse-live { 0%,100%{opacity:1} 50%{opacity:.3} }
+@keyframes slideDown  { from{opacity:0;transform:translateY(-10px)} to{opacity:1;transform:translateY(0)} }
+@keyframes slideUp    { from{opacity:0;transform:translateY(100%)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeIn     { from{opacity:0} to{opacity:1} }
+@keyframes shimmer    { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
 
-.live-dot {
-  animation: pulse-live 1.5s ease-in-out infinite;
-}
-.animate-slideDown {
-  animation: slideDown 0.2s ease-out;
-}
-.animate-fadeIn {
-  animation: fadeIn 0.3s ease-out;
-}
+.live-dot       { animation: pulse-live 1.5s ease-in-out infinite; }
+.anim-slideDown { animation: slideDown .2s ease-out; }
+.anim-slideUp   { animation: slideUp .28s ease-out; }
+.anim-fadeIn    { animation: fadeIn .2s ease-out; }
 
-/* Odds button */
+/* ── Odds button ───────────────────────────────────────── */
 .odds-btn {
-  background: #2a3045;
-  border: 1px solid #3a4060;
-  border-radius: 4px;
-  padding: 6px 12px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 4px;
+  min-height: 52px;
   cursor: pointer;
-  transition: all 0.15s ease;
-  text-align: center;
+  transition: background .15s, border-color .15s;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  width: 100%;
+  -webkit-user-select: none;
+  user-select: none;
 }
-.odds-btn:hover {
-  background: #00b050;
-  border-color: #00b050;
-  color: white;
-}
-.odds-btn.selected {
-  background: #00b050;
-  border-color: #00d060;
-  color: white;
-}
-.odds-btn.increased {
-  border-color: #00b050;
-  color: #00d060;
-}
-.odds-btn.decreased {
-  border-color: #e63946;
-  color: #e63946;
+.odds-btn:hover, .odds-btn:active { background: var(--green); border-color: var(--green); }
+.odds-btn.selected   { background: var(--green); border-color: #00d060; }
+.odds-btn.increased  { border-color: var(--green); color: #00d060; }
+.odds-btn.decreased  { border-color: var(--red); color: var(--red); }
+
+/* ── Responsive helpers (used in components) ───────────── */
+
+/* Hide on mobile, show on desktop */
+.desktop-only { display: none !important; }
+@media (min-width: 768px) {
+  .desktop-only { display: flex !important; }
 }
 
-/* Skeleton loader */
-.skeleton {
-  background: linear-gradient(90deg, #2a3045 25%, #3a4060 50%, #2a3045 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
-  border-radius: 4px;
+/* Hide on desktop, show on mobile */
+.mobile-only { display: flex !important; }
+@media (min-width: 768px) {
+  .mobile-only { display: none !important; }
 }
 
-/* Modal overlay */
+/* block variant */
+.desktop-only-block { display: none !important; }
+@media (min-width: 768px) {
+  .desktop-only-block { display: block !important; }
+}
+
+/* ── Sidebar ───────────────────────────────────────────── */
+.app-sidebar {
+  display: none;
+  flex-direction: column;
+  width: 220px;
+  background: #1a1f2e;
+  border-right: 1px solid var(--border);
+  min-height: 100%;
+  flex-shrink: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  transition: width .2s;
+}
+@media (min-width: 768px) {
+  .app-sidebar { display: flex; }
+}
+.app-sidebar.collapsed { width: 52px; }
+
+/* ── Bottom nav (mobile only) ──────────────────────────── */
+.bottom-nav {
+  display: flex;
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 90;
+  background: #0f1320;
+  border-top: 1px solid var(--border);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+@media (min-width: 768px) {
+  .bottom-nav { display: none; }
+}
+
+/* ── Header top promo bar ──────────────────────────────── */
+.header-promo-bar {
+  display: none;
+}
+@media (min-width: 768px) {
+  .header-promo-bar {
+    display: flex;
+    background: #0a0d18;
+    padding: 5px 16px;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+}
+
+/* ── Header desktop nav ────────────────────────────────── */
+.header-desktop-nav {
+  display: none;
+}
+@media (min-width: 768px) {
+  .header-desktop-nav { display: flex; gap: 2px; margin-left: 8px; }
+}
+
+/* ── Header desktop auth ───────────────────────────────── */
+.header-desktop-auth {
+  display: none;
+}
+@media (min-width: 768px) {
+  .header-desktop-auth { display: flex; gap: 8px; align-items: center; }
+}
+
+/* ── Header desktop search ─────────────────────────────── */
+.header-desktop-search {
+  display: none;
+}
+@media (min-width: 768px) {
+  .header-desktop-search { display: flex; position: relative; align-items: center; }
+}
+
+/* ── Header mobile controls ────────────────────────────── */
+.header-mobile-auth {
+  display: flex;
+}
+@media (min-width: 768px) {
+  .header-mobile-auth { display: none; }
+}
+
+/* ── Main content padding ──────────────────────────────── */
+.page-main {
+  flex: 1;
+  min-width: 0;
+  /* space for mobile bottom nav */
+  padding-bottom: 70px;
+  transition: padding-right .25s;
+}
+@media (min-width: 768px) {
+  .page-main { padding-bottom: 0; }
+}
+
+/* ── Betslip ───────────────────────────────────────────── */
+.betslip-mobile-drawer {
+  display: flex;
+  flex-direction: column;
+}
+@media (min-width: 768px) {
+  .betslip-mobile-drawer { display: none; }
+}
+
+.betslip-desktop-panel {
+  display: none;
+}
+@media (min-width: 768px) {
+  .betslip-desktop-panel {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    right: 0; top: 0;
+    height: 100vh;
+    width: 320px;
+    background: #1a1f2e;
+    border-left: 1px solid var(--border);
+    z-index: 90;
+  }
+}
+
+/* ── Auth modal ────────────────────────────────────────── */
+.auth-modal-sheet {
+  width: 100%;
+  max-width: 100%;
+  border-radius: 16px 16px 0 0;
+  border-bottom: none;
+  max-height: 95vh;
+  overflow-y: auto;
+}
+@media (min-width: 640px) {
+  .auth-modal-sheet {
+    max-width: 440px;
+    border-radius: 12px;
+    border-bottom: 1px solid var(--border);
+    max-height: 90vh;
+  }
+}
+
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.75);
-  z-index: 1000;
+  background: rgba(0,0,0,.75);
+  z-index: 200;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
-  animation: fadeIn 0.2s ease-out;
+  animation: fadeIn .2s ease-out;
+}
+@media (min-width: 640px) {
+  .modal-overlay { align-items: center; }
 }
 
-/* Bet slip slide */
-@keyframes slideLeft {
-  from { transform: translateX(100%); }
-  to { transform: translateX(0); }
+/* ── Grids ─────────────────────────────────────────────── */
+.grid-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
 }
-.betslip-panel {
-  animation: slideLeft 0.25s ease-out;
+@media (min-width: 640px) {
+  .grid-stats { grid-template-columns: repeat(4, 1fr); }
+}
+
+.grid-matches {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+@media (min-width: 560px) {
+  .grid-matches { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 1024px) {
+  .grid-matches { grid-template-columns: repeat(3, 1fr); }
+}
+
+.grid-games {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+@media (min-width: 560px) {
+  .grid-games { grid-template-columns: repeat(3, 1fr); }
+}
+@media (min-width: 768px) {
+  .grid-games { grid-template-columns: repeat(4, 1fr); }
+}
+@media (min-width: 1200px) {
+  .grid-games { grid-template-columns: repeat(5, 1fr); }
+}
+
+.grid-promos {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+@media (min-width: 640px) {
+  .grid-promos { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 1024px) {
+  .grid-promos { grid-template-columns: repeat(3, 1fr); }
+}
+
+.grid-account-menu {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+@media (min-width: 640px) {
+  .grid-account-menu { grid-template-columns: repeat(3, 1fr); }
+}
+
+.grid-wallet-balance {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.grid-bet-summary {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+@media (min-width: 640px) {
+  .grid-bet-summary { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* ── Footer columns ────────────────────────────────────── */
+.grid-footer {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+@media (min-width: 640px) {
+  .grid-footer { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* ── Live page two-panel ───────────────────────────────── */
+.live-layout {
+  display: flex;
+  flex-direction: column;
+}
+@media (min-width: 768px) {
+  .live-layout { flex-direction: row; }
+}
+.live-match-list {
+  border-bottom: 1px solid var(--border);
+  overflow-y: auto;
+}
+@media (min-width: 768px) {
+  .live-match-list {
+    width: 360px;
+    flex-shrink: 0;
+    border-bottom: none;
+    border-right: 1px solid var(--border);
+    height: calc(100vh - 140px);
+  }
+}
+.live-detail-panel {
+  flex: 1;
+  padding: 14px;
+  overflow-y: auto;
+}
+
+/* ── App download banner ───────────────────────────────── */
+.app-banner {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+@media (min-width: 768px) {
+  .app-banner {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+/* ── Notification stack ────────────────────────────────── */
+.notif-stack {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 9999;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  pointer-events: none;
+}
+@media (min-width: 640px) {
+  .notif-stack {
+    top: 72px;
+    left: auto;
+    right: 12px;
+    width: 320px;
+    padding: 0;
+  }
 }
