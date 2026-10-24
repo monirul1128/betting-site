@@ -1,0 +1,119 @@
+@import "tailwindcss";
+
+:root {
+  --bg-primary: #1a1f2e;
+  --bg-secondary: #242938;
+  --bg-card: #1e2435;
+  --accent-green: #00b050;
+  --accent-green-hover: #00d060;
+  --accent-yellow: #f5c518;
+  --accent-red: #e63946;
+  --text-primary: #ffffff;
+  --text-secondary: #9aa0b4;
+  --border-color: #2e3347;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-secondary); }
+::-webkit-scrollbar-thumb { background: #3a4060; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #4a5070; }
+
+/* Animations */
+@keyframes pulse-live {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.live-dot {
+  animation: pulse-live 1.5s ease-in-out infinite;
+}
+.animate-slideDown {
+  animation: slideDown 0.2s ease-out;
+}
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Odds button */
+.odds-btn {
+  background: #2a3045;
+  border: 1px solid #3a4060;
+  border-radius: 4px;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: center;
+}
+.odds-btn:hover {
+  background: #00b050;
+  border-color: #00b050;
+  color: white;
+}
+.odds-btn.selected {
+  background: #00b050;
+  border-color: #00d060;
+  color: white;
+}
+.odds-btn.increased {
+  border-color: #00b050;
+  color: #00d060;
+}
+.odds-btn.decreased {
+  border-color: #e63946;
+  color: #e63946;
+}
+
+/* Skeleton loader */
+.skeleton {
+  background: linear-gradient(90deg, #2a3045 25%, #3a4060 50%, #2a3045 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+}
+
+/* Modal overlay */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* Bet slip slide */
+@keyframes slideLeft {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+.betslip-panel {
+  animation: slideLeft 0.25s ease-out;
+}
